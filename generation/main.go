@@ -40,7 +40,7 @@ func generateEmail() string {
 }
 
 func main() {
-	file, err := os.Create("generation/pure_data_" + time.Now().String()[0:10] + ".csv")
+	file, err := os.Create("input_data/pure_data_" + time.Now().String()[0:10] + ".csv")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
