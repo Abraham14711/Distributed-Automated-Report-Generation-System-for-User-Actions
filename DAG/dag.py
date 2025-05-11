@@ -13,7 +13,7 @@ default_args = {
 with DAG(
     dag_id = "spark_dag",
     default_args = default_args,
-    schedule_interval = "@weekly",
+    schedule_interval = "@daily",
     start_date = days_ago(6),
     catchup = True,
     description = "Weekly report generation"
