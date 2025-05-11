@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  spark-master:
+    image: spark-custom-image
+    container_name: spark-master
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    environment:
+      - SPARK_MODE=master
+    volumes:
+      - ./generation:/opt/spark/generation
+      - ./input_data:/opt/spark/input_data
+      - ./jobs:/opt/spark/jobs
+
+  spark-worker:
+    image: spark-custom-image
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=1g
+    volumes:
+      - ./generation:/opt/spark/generation
+      - ./input_data:/opt/spark/input_data
+      - ./jobs:/opt/spark/jobs
+    deploy:
+      replicas: 2  
