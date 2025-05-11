@@ -4,6 +4,10 @@ services:
   spark-master:
     image: spark-custom-image
     container_name: spark-master
+    command: >
+      bash -c "
+      tail -f /dev/null
+      "
     ports:
       - "8080:8080"
       - "7077:7077"
@@ -18,6 +22,10 @@ services:
     image: spark-custom-image
     depends_on:
       - spark-master
+    command: >
+      bash -c "
+      tail -f /dev/null
+      "
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077

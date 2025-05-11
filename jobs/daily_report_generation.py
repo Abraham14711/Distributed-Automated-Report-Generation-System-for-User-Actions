@@ -15,7 +15,7 @@ StructField("date", TimestampType(), False),
 StructField("time", StringType(), False)
 ])
 
-file = spark.read.csv("input_data/pure_data_" + date + ".csv", header=False, sep=",",schema=schema)
+file = spark.read.csv("/opt/spark/input_data/pure_data_" + date + ".csv", header=False, sep=",",schema=schema)
 
 counted_actions = file.groupBy("email").agg(
     F.count(F.when(F.col("action") == "CREATE", 1)).alias("create_count"),
@@ -35,4 +35,4 @@ counted_actions = file.groupBy("email").agg(
 
 counted_actions.show()
 
-counted_actions.write.parquet("output_data")
+counted_actions.write.parquet("/opt/spark/output_data")
