@@ -1,5 +1,22 @@
 version: '3.8'
 
+
+
+x-airflow-common: &airflow-common
+  image: airflow-custom-image
+  env_file:
+    - airflow.env
+  volumes:
+    - ./jobs:/opt/airflow/jobs
+    - ./DAG:/opt/airflow/DAG
+    - ./input_data:/opt/airflow/input_data
+    - ./output_data:/opt/airflow/output_data
+    - ./generate:/opt/airflow/generate
+  depends_on:
+    - postgres
+  networks:
+    - airflow-network
+
 services:
   spark-master:
     image: spark-custom-image
@@ -37,3 +54,28 @@ services:
       - ./jobs:/opt/spark/jobs
     deploy:
       replicas: 2  
+  postgres:
+    image: postgres:14.0
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    networks:
+      - airflow-network
+
+  webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    depends_on:
+      - scheduler
+    networks:
+      - airflow-network
+
+  scheduler:
+    <<: *airflow-common
+    command: bash -c "airflow db migrate && airflow users create --username admin --firstname Abraham --lastname Barrett --role Admin --email p.zavadskii@innopolis.university --password admin && airflow scheduler"
+
+networks:
+  airflow-network:
