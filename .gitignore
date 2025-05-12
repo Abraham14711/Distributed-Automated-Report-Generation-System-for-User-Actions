@@ -1,3 +1,4 @@
 DAG/venv
 jobs/venv
 .env
+.airflow.env
