@@ -34,6 +34,8 @@ services:
       - ./generation:/opt/spark/generation
       - ./input_data:/opt/spark/input_data
       - ./jobs:/opt/spark/jobs
+    networks:
+      - airflow-network
 
   spark-worker:
     image: spark-custom-image
@@ -54,6 +56,7 @@ services:
       - ./jobs:/opt/spark/jobs
     deploy:
       replicas: 2  
+      
   postgres:
     image: postgres:14.0
     environment:
