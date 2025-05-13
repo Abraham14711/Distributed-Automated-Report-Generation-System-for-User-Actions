@@ -21,10 +21,10 @@ with DAG(
     
     start = EmptyOperator(task_id = "start")
     
-    # get_newest_data = BashOperator(
-    #     task_id  = "newest_data_download",
-    #     bash_command = "go run /opt/airflow/generation/main.go"
-    # )
+    get_newest_data = BashOperator(
+        task_id  = "newest_data_download",
+        bash_command = "go run /opt/airflow/generation/main.go"
+    )
 
     create_daily_report = SparkSubmitOperator(
         task_id = "daily_report_creation",
@@ -37,7 +37,7 @@ with DAG(
 
     (
         start
-        # >> get_newest_data 
+        >> get_newest_data 
         >> create_daily_report
         >> end
     )
