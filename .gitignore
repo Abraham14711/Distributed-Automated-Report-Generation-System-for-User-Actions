@@ -2,3 +2,4 @@ DAG/venv
 jobs/venv
 .env
 .airflow.env
+__pycache__

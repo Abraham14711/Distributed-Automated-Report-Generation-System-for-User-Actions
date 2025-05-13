@@ -10,6 +10,17 @@ RUN apt-get update && \
         procps && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && \
+    apt-get install -y wget tar gcc && \
+    rm -rf /var/lib/apt/lists/* && \
+    wget https://golang.org/dl/go1.21.3.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
+    tar -C /usr/local -xzf /tmp/go.tar.gz && \
+    rm /tmp/go.tar.gz
+
+ENV PATH="/usr/local/go/bin:${PATH}"
+ENV GOPATH="/go"
+ENV PATH="${GOPATH}/bin:${PATH}"
+
 USER airflow
 
 RUN pip install --no-cache-dir \

@@ -14,8 +14,8 @@ with DAG(
     dag_id = "spark_dag",
     default_args = default_args,
     schedule_interval = "@daily",
-    start_date = days_ago(6),
-    catchup = True,
+    start_date = days_ago(0),
+    catchup = False,
     description = "Weekly report generation"
 ) as dag: 
     
@@ -28,7 +28,8 @@ with DAG(
 
     create_daily_report = SparkSubmitOperator(
         task_id = "daily_report_creation",
-        conn_id = "spark connection",
+        conn_id = "spark_connection",
+        conf={"spark.master": "local"},
         application = "/opt/airflow/jobs/daily_report_generation.py",
     )
 
@@ -36,7 +37,7 @@ with DAG(
 
     (
         start
-        >> newest_data_download
-        >> daily_report_creation
+        # >> get_newest_data 
+        >> create_daily_report
         >> end
     )

@@ -5,13 +5,13 @@ version: '3.8'
 x-airflow-common: &airflow-common
   image: airflow-custom-image
   env_file:
-    - airflow.env
+    - .airflow.env
   volumes:
     - ./jobs:/opt/airflow/jobs
-    - ./DAG:/opt/airflow/DAG
+    - ./DAG:/opt/airflow/dags
     - ./input_data:/opt/airflow/input_data
     - ./output_data:/opt/airflow/output_data
-    - ./generate:/opt/airflow/generate
+    - ./generation:/opt/airflow/generation
   depends_on:
     - postgres
   networks:
@@ -70,7 +70,7 @@ services:
     <<: *airflow-common
     command: webserver
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       - scheduler
     networks:
