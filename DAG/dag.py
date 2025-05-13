@@ -22,12 +22,21 @@ with DAG(
     start = EmptyOperator(task_id = "start")
     
     get_newest_data = BashOperator(
-        task_id  = "newest data download",
+        task_id  = "newest_data_download",
         bash_command = "go run /opt/airflow/generation/main.go"
     )
 
     create_daily_report = SparkSubmitOperator(
-        task_id = "daily report creation",
+        task_id = "daily_report_creation",
         conn_id = "spark connection",
-        application = "/opt/airflow/"# TODO write dayly report generation and change path
+        application = "/opt/airflow/jobs/daily_report_generation.py",
+    )
+
+    end = EmptyOperator(task_id = 'end')
+
+    (
+        start
+        >> newest_data_download
+        >> daily_report_creation
+        >> end
     )
