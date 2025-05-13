@@ -3,3 +3,4 @@ jobs/venv
 .env
 .airflow.env
 __pycache__
+output_data/date*

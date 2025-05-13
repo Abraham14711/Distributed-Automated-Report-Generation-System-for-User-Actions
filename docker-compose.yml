@@ -1,6 +1,14 @@
 version: '3.8'
 
-
+x-spark-common: &spark-common
+  image: bitnami/spark:latest
+  volumes:
+    - ./jobs:/opt/bitnami/spark/jobs
+    - ./input_data:/opt/spark/input_data
+    - ./output_data:/opt/spark/output_data
+    - ./generation:/opt/spark/generation
+  networks:
+    - airflow-network
 
 x-airflow-common: &airflow-common
   image: airflow-custom-image
@@ -10,7 +18,9 @@ x-airflow-common: &airflow-common
     - ./jobs:/opt/airflow/jobs
     - ./DAG:/opt/airflow/dags
     - ./input_data:/opt/airflow/input_data
+    - ./input_data:/opt/spark/input_data
     - ./output_data:/opt/airflow/output_data
+    - ./output_data:/opt/spark/output_data
     - ./generation:/opt/airflow/generation
   depends_on:
     - postgres
@@ -19,44 +29,26 @@ x-airflow-common: &airflow-common
 
 services:
   spark-master:
-    image: spark-custom-image
-    container_name: spark-master
-    command: >
-      bash -c "
-      tail -f /dev/null
-      "
+    <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.master.Master
     ports:
       - "8080:8080"
       - "7077:7077"
-    environment:
-      - SPARK_MODE=master
-    volumes:
-      - ./generation:/opt/spark/generation
-      - ./input_data:/opt/spark/input_data
-      - ./jobs:/opt/spark/jobs
     networks:
       - airflow-network
 
   spark-worker:
-    image: spark-custom-image
+    <<: *spark-common
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     depends_on:
       - spark-master
-    command: >
-      bash -c "
-      tail -f /dev/null
-      "
     environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_CORES=2
-      - SPARK_WORKER_MEMORY=1g
-    volumes:
-      - ./generation:/opt/spark/generation
-      - ./input_data:/opt/spark/input_data
-      - ./jobs:/opt/spark/jobs
-    deploy:
-      replicas: 2  
-      
+      SPARK_MODE: worker
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_MASTER_URL: spark://spark-master:7077
+    networks:
+      - airflow-network
   postgres:
     image: postgres:14.0
     environment:

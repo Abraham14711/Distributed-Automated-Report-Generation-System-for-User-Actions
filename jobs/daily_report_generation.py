@@ -35,4 +35,4 @@ counted_actions = file.groupBy("email").agg(
 
 counted_actions.show()
 
-counted_actions.write.parquet("/opt/spark/output_data")
+counted_actions.write.mode("overwrite").parquet("/opt/spark/output_data/date=" + date)
