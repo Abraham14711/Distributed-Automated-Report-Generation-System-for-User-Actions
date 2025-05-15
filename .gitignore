@@ -4,3 +4,4 @@ jobs/venv
 .airflow.env
 __pycache__
 output_data/date*
+input_data/pure*

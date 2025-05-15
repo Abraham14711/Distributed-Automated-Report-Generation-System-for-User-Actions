@@ -33,11 +33,17 @@ with DAG(
         application = "/opt/airflow/jobs/daily_report_generation.py",
     )
 
+    push_report  = BashOperator(
+        task_id = "push_report",
+        bash_command = "go run /opt/airflow/jobs/hadoop_client.go"
+    )
+
     end = EmptyOperator(task_id = 'end')
 
     (
         start
         >> get_newest_data 
         >> create_daily_report
+        >> push_report
         >> end
     )
