@@ -37,8 +37,6 @@ jobs:
       SSH_USER: root
 
     steps:
-      - name: Set up SSH
-
       - name: Ping server
         run: ssh "$SSH_USER@$SSH_HOST" "echo Server reachable!"
 
