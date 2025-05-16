@@ -33,17 +33,11 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SSH_HOST: ${{ secrets.REMOTE_HOST }}
-      SSH_USER: ${{ secrets.REMOTE_USER }}
-      SSH_KEY: ${{ secrets.REMOTE_SSH_KEY }}
+      SSH_HOST: 176.119.159.108
+      SSH_USER: root
 
     steps:
       - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
 
       - name: Ping server
         run: ssh "$SSH_USER@$SSH_HOST" "echo Server reachable!"
