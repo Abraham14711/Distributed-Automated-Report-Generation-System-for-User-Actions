@@ -92,7 +92,7 @@ helm install hadoop   --set persistence.dataNode.size=10Gi   --set persistence.n
 | **Spark Master**   | Cluster communication        | `7077` |
 | **Spark Master UI**| Web interface (Spark Master) | `8080` |
 | **Airflow UI**     | DAG management interface     | `8081` |
-| **HDFS** |  NameNode client interface   | `8020` |
+| **HDFS** |  Client communication interface   | `9000` |
 | **Hadoop UI**      | HDFS Web UI       | `9870` |
 
 ---
