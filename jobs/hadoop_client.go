@@ -32,7 +32,7 @@ func main() {
 
 	hdfsDir := "/data/reports"
 	today := time.Now().Format("2006-01-02")
-	localDir := filepath.Join("output_data", "date="+today)
+	localDir := filepath.Join("/opt/airflow/output_data", "date="+today)
 
 	if err := client.MkdirAll(hdfsDir, 0755); err != nil {
 		log.Fatalf("Failed to create HDFS directory: %v", err)
