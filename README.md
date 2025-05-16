@@ -10,7 +10,7 @@ The pipeline integrates the following key technologies:
 - **Apache Spark** for distributed processing
 - **Hadoop (HDFS)** for storage
 - **Python** for managing aiflow pipeline using DAG files 
-- **Go** for synthetic data generation
+- **Go** for synthetic data generation and implementing an HDFS client
 - **Kubernetes** for the orchestration of distributed database components 
 - **Docker/Docker-compose** for containerization and orchestration 
 
@@ -63,7 +63,7 @@ Airflow communicates with the Spark Master via the `SparkSubmitOperator`. The Ma
 
 Apache Airflow manages the pipeline execution flow:
 
-- **Start → Generate CSV → Spark Processing → End**
+- **Start → Generate CSV → Spark Processing → Send to HDFS → End**
 
 Airflow is containerized and deployed with a web interface on:
 
@@ -83,12 +83,18 @@ helm install hadoop   --set persistence.dataNode.size=10Gi   --set persistence.n
 ```
 
 
+
+
 ## 🔌 Ports Summary
 
-| Service      | Description             | Port   |
-|--------------|-------------------------|--------|
-| **Spark Master** | Cluster communication     | `7077` |
-| **Spark Master UI** | Web interface             | `8080` |
-| **Airflow UI**     | DAG management interface  | `8081` |
+| Service            | Description                  | Port   |
+|--------------------|------------------------------|--------|
+| **Spark Master**   | Cluster communication        | `7077` |
+| **Spark Master UI**| Web interface (Spark Master) | `8080` |
+| **Airflow UI**     | DAG management interface     | `8081` |
+| **HDFS** |  NameNode client interface   | `8020` |
+| **Hadoop UI**      | HDFS Web UI       | `9870` |
+
+---
 
 ---
