@@ -9,10 +9,10 @@ The pipeline integrates the following key technologies:
 - **Apache Airflow** for orchestration
 - **Apache Spark** for distributed processing
 - **Hadoop (HDFS)** for storage
-- **Go** for synthetic data generation
-### Since this is a test bench, all the data we process is generated using a Go script in the generation directory. On a real stand there will be no need to use this script.
-- **Kubernetes** for container orchestration
-- **Docker** for containerization
+- **Python** for managing aiflow pipeline using DAG files 
+- **Go** for synthetic data generation and implementing an HDFS client
+- **Kubernetes** for the orchestration of distributed database components 
+- **Docker/Docker-compose** for containerization and orchestration 
 
 ---
 
@@ -26,10 +26,12 @@ The pipeline integrates the following key technologies:
 
 ## ⚙️ Architecture
 
+The entire system runs on a **Kubernetes cluster consisting of 3 nodes**.
+
 ### **Data Generation**
 
 A Go-based script (`main.go`) generates synthetic CSV data simulating user actions (e.g., `INSERT`, `DELETE`, `SELECT`, etc.). Each record includes:
-- User ID
+- User Email
 - Timestamp
 - Action Type
 
@@ -41,7 +43,7 @@ Generated CSV files are stored in a shared volume accessible by other services.
 
 Apache Spark is deployed in **distributed mode** with:
 - **1 Master node**
-- **1 Worker node**
+- **2 Worker node**
 
 Spark listens on:
 - `7077` for cluster communication
@@ -61,7 +63,7 @@ Airflow communicates with the Spark Master via the `SparkSubmitOperator`. The Ma
 
 Apache Airflow manages the pipeline execution flow:
 
-- **Start → Generate CSV → Spark Processing → End**
+- **Start → Generate CSV → Spark Processing → Send to HDFS → End**
 
 Airflow is containerized and deployed with a web interface on:
 
@@ -71,14 +73,28 @@ DAGs are written in Python and handle retries, logging, and scheduling.
 
 ---
 
+## 🧱 Hadoop Deployment in Kubernetes
+
+Hadoop is deployed in Kubernetes using custom Helm charts:
+
+```bash
+helm repo add pfisterer-hadoop https://pfisterer.github.io/apache-hadoop-helm/
+helm install hadoop   --set persistence.dataNode.size=10Gi   --set persistence.nameNode.size=10Gi pfisterer-hadoop/hadoop
+```
+
+
 
 
 ## 🔌 Ports Summary
 
-| Service      | Description             | Port   |
-|--------------|-------------------------|--------|
-| **Spark Master** | Cluster communication     | `7077` |
-| **Spark Master UI** | Web interface             | `8080` |
-| **Airflow UI**     | DAG management interface  | `8081` |
+| Service            | Description                  | Port   |
+|--------------------|------------------------------|--------|
+| **Spark Master**   | Cluster communication        | `7077` |
+| **Spark Master UI**| Web interface (Spark Master) | `8080` |
+| **Airflow UI**     | DAG management interface     | `8081` |
+| **HDFS** |  NameNode client interface   | `8020` |
+| **Hadoop UI**      | HDFS Web UI       | `9870` |
+
+---
 
 ---
