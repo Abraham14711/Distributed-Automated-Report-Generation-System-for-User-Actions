@@ -1,0 +1,68 @@
+name: CI for Data Generation
+
+on:
+  push:
+    paths:
+      - 'generation/main.go'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    paths:
+      - 'generation/main.go'
+      - '.github/workflows/ci.yml'
+
+jobs:
+  test-generation:
+    name: Run Go generation tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.2
+
+      - name: Run go test
+        working-directory: ./generation
+        run: go test ./...
+
+  check-remote:
+    name: Check remote server environment
+    runs-on: ubuntu-latest
+
+    env:
+      SSH_HOST: ${{ secrets.REMOTE_HOST }}
+      SSH_USER: ${{ secrets.REMOTE_USER }}
+      SSH_KEY: ${{ secrets.REMOTE_SSH_KEY }}
+
+    steps:
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Ping server
+        run: ssh "$SSH_USER@$SSH_HOST" "echo Server reachable!"
+
+      - name: Check tools
+        run: |
+          ssh "$SSH_USER@$SSH_HOST" '
+            echo "...Checking tools on server...";
+            command -v go || echo "go not found!";
+            go version || echo "go version check failed!";
+
+            command -v python3 || echo "python3 not found";
+            python3 --version || echo "python3 version check failed!";
+
+            command -v pyspark || echo "pyspark not found!";
+            pyspark --version || echo "pyspark version check failed!";
+
+            command -v docker || echo "docker not found!";
+            docker --version || echo "docker version check failed!";
+          '
+
+
