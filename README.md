@@ -26,6 +26,8 @@ The pipeline integrates the following key technologies:
 
 ## ⚙️ Architecture
 
+The entire system runs on a **Kubernetes cluster consisting of 3 nodes**.
+
 ### **Data Generation**
 
 A Go-based script (`main.go`) generates synthetic CSV data simulating user actions (e.g., `INSERT`, `DELETE`, `SELECT`, etc.). Each record includes:
@@ -71,6 +73,14 @@ DAGs are written in Python and handle retries, logging, and scheduling.
 
 ---
 
+## 🧱 Hadoop Deployment in Kubernetes
+
+Hadoop is deployed in Kubernetes using custom Helm charts:
+
+```bash
+helm repo add pfisterer-hadoop https://pfisterer.github.io/apache-hadoop-helm/
+helm install hadoop   --set persistence.dataNode.size=10Gi   --set persistence.nameNode.size=10Gi pfisterer-hadoop/hadoop
+```
 
 
 ## 🔌 Ports Summary
