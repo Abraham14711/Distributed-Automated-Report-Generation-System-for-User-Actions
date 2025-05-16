@@ -9,10 +9,10 @@ The pipeline integrates the following key technologies:
 - **Apache Airflow** for orchestration
 - **Apache Spark** for distributed processing
 - **Hadoop (HDFS)** for storage
+- **Python** for managing aiflow pipeline using DAG files 
 - **Go** for synthetic data generation
-### Since this is a test bench, all the data we process is generated using a Go script in the generation directory. On a real stand there will be no need to use this script.
-- **Kubernetes** for container orchestration
-- **Docker** for containerization
+- **Kubernetes** for the orchestration of distributed database components 
+- **Docker/Docker-compose** for containerization and orchestration 
 
 ---
 
@@ -31,7 +31,7 @@ The entire system runs on a **Kubernetes cluster consisting of 3 nodes**.
 ### **Data Generation**
 
 A Go-based script (`main.go`) generates synthetic CSV data simulating user actions (e.g., `INSERT`, `DELETE`, `SELECT`, etc.). Each record includes:
-- User ID
+- User Email
 - Timestamp
 - Action Type
 
@@ -43,7 +43,7 @@ Generated CSV files are stored in a shared volume accessible by other services.
 
 Apache Spark is deployed in **distributed mode** with:
 - **1 Master node**
-- **1 Worker node**
+- **2 Worker node**
 
 Spark listens on:
 - `7077` for cluster communication
