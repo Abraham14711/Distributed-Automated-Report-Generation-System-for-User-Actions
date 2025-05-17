@@ -7,7 +7,9 @@ RUN apt-get update && \
         gcc \
         python3-dev \
         openjdk-11-jdk \
-        procps && \
+        procps \
+        wget \
+        tar && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
@@ -16,6 +18,9 @@ RUN apt-get update && \
     wget https://golang.org/dl/go1.21.3.linux-amd64.tar.gz -O /tmp/go.tar.gz && \
     tar -C /usr/local -xzf /tmp/go.tar.gz && \
     rm /tmp/go.tar.gz
+
+RUN mkdir -p /go && \
+    chown -R airflow /go
 
 ENV PATH="/usr/local/go/bin:${PATH}"
 ENV GOPATH="/go"
