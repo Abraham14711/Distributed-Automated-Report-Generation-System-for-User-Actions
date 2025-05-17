@@ -32,17 +32,22 @@ jobs:
     name: Check remote server environment
     runs-on: ubuntu-latest
 
-    env:
-      SSH_HOST: 176.119.159.108
-      SSH_USER: root
-
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+
       - name: Ping server
-        run: ssh "$SSH_USER@$SSH_HOST" "echo Server reachable!"
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo Server reachable!"
 
       - name: Check tools
         run: |
-          ssh "$SSH_USER@$SSH_HOST" '
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
             echo "...Checking tools on server...";
             command -v go || echo "go not found!";
             go version || echo "go version check failed!";
@@ -56,5 +61,4 @@ jobs:
             command -v docker || echo "docker not found!";
             docker --version || echo "docker version check failed!";
           '
-
 
