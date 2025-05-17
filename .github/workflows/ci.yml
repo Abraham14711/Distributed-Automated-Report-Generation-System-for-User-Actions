@@ -43,7 +43,7 @@ jobs:
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
 
       - name: Ping server
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo Server reachable!"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo Server reachable!"
 
       - name: Check tools
         run: |
