@@ -18,10 +18,12 @@ RUN apt-get update && \
     rm /tmp/go.tar.gz
 
 RUN mkdir -p /go && \
+    mkdir -p /opt/airflow/input_data && \
+    mkdir -p /opt/airflow/output_data && \
     chown -R airflow /go && \
     chown -R airflow /opt/airflow/input_data && \
     chown -R airflow /opt/airflow/output_data && \
-    
+
 USER airflow
 
 ENV PATH="/usr/local/go/bin:${PATH}"
