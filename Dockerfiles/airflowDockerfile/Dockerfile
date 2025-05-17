@@ -7,9 +7,7 @@ RUN apt-get update && \
         gcc \
         python3-dev \
         openjdk-11-jdk \
-        procps \
-        wget \
-        tar && \
+        procps && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
@@ -26,7 +24,6 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 ENV GOPATH="/go"
 ENV PATH="${GOPATH}/bin:${PATH}"
 
-USER airflow
 
 RUN pip install --no-cache-dir \
     apache-airflow==2.7.1 \
