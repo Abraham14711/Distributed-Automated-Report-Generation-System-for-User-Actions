@@ -22,7 +22,7 @@ RUN mkdir -p /go && \
     mkdir -p /opt/airflow/output_data && \
     chown -R airflow /go && \
     chown -R airflow /opt/airflow/input_data && \
-    chown -R airflow /opt/airflow/output_data && \
+    chown -R airflow /opt/airflow/output_data 
 
 USER airflow
 
