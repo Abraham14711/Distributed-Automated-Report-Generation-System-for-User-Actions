@@ -48,7 +48,5 @@ jobs:
       - name: Check tools
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-             cd /root && git pull 2>/dev/null;
-           
+            cd /root && git pull 2>/dev/null
           '
-
