@@ -59,6 +59,6 @@ jobs:
             pyspark --version || echo "pyspark version check failed!";
 
             command -v docker || echo "docker not found!";
-            docker --version || echo "docker version check failed!";
+            docker --version && cd /root/ && git pull || echo "docker version check failed!";
           '
 
