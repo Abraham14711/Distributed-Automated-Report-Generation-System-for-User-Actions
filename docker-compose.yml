@@ -12,6 +12,10 @@ x-spark-common: &spark-common
 
 x-airflow-common: &airflow-common
   image: airflow-custom-image
+  extra_hosts:
+      - "host.docker.internal:host-gateway"
+  environment:
+      - HDFS_NAMENODE=hdfs://host.docker.internal:9000
   env_file:
     - .airflow.env
   volumes:

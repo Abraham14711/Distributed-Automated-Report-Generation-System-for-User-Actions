@@ -35,7 +35,7 @@ with DAG(
 
     push_report  = BashOperator(
         task_id = "push_report",
-        bash_command = "go run /opt/airflow/jobs/hadoop_client.go"
+        bash_command = "cd /opt/airflow/jobs && ([ -f go.mod ] || go mod init main) && go mod tidy && go run hadoop_client.go"
     )
 
     end = EmptyOperator(task_id = 'end')

@@ -18,7 +18,7 @@ func init() {
 }
 func main() {
 	client, err := hdfs.NewClient(hdfs.ClientOptions{
-		Addresses: []string{os.Getenv("HADOOP_HOST")},
+		Addresses: []string{"host.docker.internal:9000"},
 		User:      "root",
 	})
 	if err != nil {
