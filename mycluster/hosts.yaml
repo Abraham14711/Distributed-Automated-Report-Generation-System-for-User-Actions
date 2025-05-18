@@ -1,14 +1,10 @@
 all:
   hosts:
     node1:
-      ansible_host: 194.147.34.16
-      ip: 194.147.34.16
-      access_ip: 194.147.34.16
-    node2:
       ansible_host: 194.147.34.230
       ip: 194.147.34.230
       access_ip: 194.147.34.230
-    node3:
+    node2:
       ansible_host: 194.147.34.35
       ip: 194.147.34.35
       access_ip: 194.147.34.35
@@ -20,7 +16,6 @@ all:
       hosts:
         node1:
         node2:
-        node3:
     etcd:
       hosts:
         node1:
