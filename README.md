@@ -26,7 +26,7 @@ The pipeline integrates the following key technologies:
 
 ## ⚙️ Architecture
 
-The entire system runs on a **Kubernetes cluster consisting of 3 nodes**.
+The entire system runs on a **Kubernetes cluster consisting of 2 nodes**.
 
 ### **Data Generation**
 
@@ -43,7 +43,7 @@ Generated CSV files are stored in a shared volume accessible by other services.
 
 Apache Spark is deployed in **distributed mode** with:
 - **1 Master node**
-- **2 Worker node**
+- **1 Worker node**
 
 Spark listens on:
 - `7077` for cluster communication
@@ -83,7 +83,11 @@ helm install hadoop   --set persistence.dataNode.size=10Gi   --set persistence.n
 ```
 
 
-
+## 📡 Port Forwarding (Hadoop to Host)
+Hadoop ports from the Kubernetes cluster are forwarded to the server's localhost using the following command, which is run as a background service.
+```bash
+kubectl port-forward --address 0.0.0.0 pod/hadoop-hadoop-hdfs-nn-0 9870:9870 9000:9000
+```
 
 ## 🔌 Ports Summary
 
@@ -95,6 +99,26 @@ helm install hadoop   --set persistence.dataNode.size=10Gi   --set persistence.n
 | **HDFS** |  Client communication interface   | `9000` |
 | **Hadoop UI**      | HDFS Web UI       | `9870` |
 
+## 🔧 Environment Configuration
+To run the project correctly, an environment file named `.airflow.env` is required for Apache Airflow configuration.
+
+This file should include the following variables:
+
+```bash
+AIRFLOW__CORE__LOAD_EXAMPLES=False
+AIRFLOW__CORE__EXECUTOR=LocalExecutor
+AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+AIRFLOW__WEBSERVER_BASE_URL=http://localhost:8080
+AIRFLOW__WEBSERVER__SECRET_KEY=your_secret_key_here
+
+```
+
+
+
+## 🔔 Notification: 
+
+If everything except the Airflow Web UI starts up after running `docker compose up`, you may need to 
+start the container manually using `docker start <node_name>` or via Docker Desktop.
 ---
 
 ---
