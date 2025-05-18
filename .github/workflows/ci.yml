@@ -48,17 +48,6 @@ jobs:
       - name: Check tools
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-            echo "...Checking tools on server...";
-            command -v go || echo "go not found!";
-            go version || echo "go version check failed!";
-
-            command -v python3 || echo "python3 not found";
-            python3 --version || echo "python3 version check failed!";
-
-            command -v pyspark || echo "pyspark not found!";
-            pyspark --version || echo "pyspark version check failed!";
-
-            command -v docker || echo "docker not found!";
-            docker --version || echo "docker version check failed!";
+            cd /root/ && git pull >> /dev/null ;
           '
 
