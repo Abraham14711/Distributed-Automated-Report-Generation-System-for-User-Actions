@@ -119,6 +119,5 @@ AIRFLOW__WEBSERVER__SECRET_KEY=your_secret_key_here
 
 If everything except the Airflow Web UI starts up after running `docker compose up`, you may need to 
 start the container manually using `docker start <node_name>` or via Docker Desktop.
----
 
 ---
